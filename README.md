@@ -1,15 +1,14 @@
-Ethereum Network Intelligence API
-============
-[![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url]
+# Ethereum Network Intelligence API
+
+[![Build Status][github-actions-image]][github-actions-url]
 
 This is the backend service which runs along with ethereum and tracks the network status, fetches information through JSON-RPC and connects through WebSockets to [eth-netstats](https://github.com/cubedro/eth-netstats) to feed information. For full install instructions please read the [wiki](https://github.com/ethereum/wiki/wiki/Network-Status).
 
-
 ## Prerequisite
-* eth, geth or pyethapp
-* node
-* npm
 
+- eth, geth or pyethapp
+- node
+- npm
 
 ## Installation on an Ubuntu EC2 Instance
 
@@ -18,6 +17,7 @@ Fetch and run the build shell. This will install everything you need: latest eth
 ```bash
 bash <(curl https://raw.githubusercontent.com/cubedro/eth-net-intelligence-api/master/bin/build.sh)
 ```
+
 ## Installation as docker container (optional)
 
 There is a `Dockerfile` in the root directory of the repository. Please read through the header of said file for
@@ -61,7 +61,5 @@ To update the API client use the following command:
 
 It will stop the current netstats client processes, automatically detect your ethereum implementation and version, update it to the latest develop build, update netstats client and reload the processes.
 
-[travis-image]: https://travis-ci.org/cubedro/eth-net-intelligence-api.svg
-[travis-url]: https://travis-ci.org/cubedro/eth-net-intelligence-api
-[dep-image]: https://david-dm.org/cubedro/eth-net-intelligence-api.svg
-[dep-url]: https://david-dm.org/cubedro/eth-net-intelligence-api
+[github-actions-image]: https://github.com/KaryonFood/eth-net-intelligence-api/workflows/Master/badge.svg?branch=master
+[github-actions-url]: https://github.com/KaryonFood/eth-net-intelligence-api/actions?query=workflow%3AMaster
