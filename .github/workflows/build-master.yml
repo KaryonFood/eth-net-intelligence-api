@@ -2,8 +2,6 @@ name: Master
 on:
   push:
     branches: [master]
-env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   build-and-release:
@@ -13,57 +11,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Set up Node.js 12
-        uses: actions/setup-node@v1
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
         with:
-          node-version: '12.x'
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Caching yarn
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        run: |
-          sudo snap install yq jq
-          yarn setup
-          yarn bootstrap:ci
-
-      - name: Check linting
-        run: yarn lint:check
-
-      - name: Fetch tags
-        run: |
-          git fetch --all --unshallow --tags
-          git config user.email "vitanick@ninjawulf98.com"
-          git config user.name "ninjawulf98"
-
-      # - name: Publish the packages
-      #   run: |
-      #       git checkout master
-      #       npx lerna publish --exact --conventional-commits --create-release github --yes --include-merged-tags
-      #   env:
-      #       GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Build the packages
-        run: |
-          yarn build
-          yarn assemble
-        env:
-          CI: false
-
-      - name: Build the docker containers
-        run: |
-          echo '${{ secrets.DOCKERHUB_PASSWORD }}' | docker login --username ${{ secrets.DOCKERHUB_USER }} --password-stdin
-          export BRANCH=`cat $GITHUB_EVENT_PATH | jq -er ".pull_request.head.ref // \"${GITHUB_REF##*/}\""`
-          export VERSION=`jq -r .version lerna.json`
-          export COMMIT=`git rev-parse --short "$GITHUB_SHA"`
-          echo "Build will use $BRANCH as branch name and $VERSION as version"
-          yarn docker
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: karyonfood/ethstats-client
+          tags: latest,master
